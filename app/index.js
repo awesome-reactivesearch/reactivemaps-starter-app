@@ -21,6 +21,7 @@ class HelloWorld extends Component {
 							componentId="CitySensor"
 							appbaseField="group.group_city.raw"
 							title="SingleList"
+							defaultSelected="New York"
 							size={100}
 							{...this.props}
 						/>
