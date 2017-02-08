@@ -6,6 +6,10 @@ import {
 	ResultList
 } from '@appbaseio/reactivebase';
 
+import {
+	ReactiveMap
+} from '@appbaseio/reactivemaps';
+
 class HelloWorld extends Component {
 	render() {
 		return (
@@ -28,16 +32,17 @@ class HelloWorld extends Component {
 					</div>
 
 					<div className="col s6 col-xs-6">
-						<ResultList
+						<ReactiveMap
 							componentId="SearchResult"
-							appbaseField="group.group_topics.topic_name_raw"
+							appbaseField="venue"
 							title="Results"
 							sortBy="asc"
 							from={0}
-							size={20}
-							requestOnScroll={true}
 							actuate={{
 								CitySensor: {"operation": "must"}
+							}}
+							containerStyle={{
+								height: '600px'
 							}}
 						/>
 					</div>
