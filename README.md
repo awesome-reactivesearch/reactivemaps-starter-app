@@ -1,4 +1,6 @@
-# `reactivemaps-app`
+# `reactivemaps-starter-app`
+
+The reactivemaps app is a simple getting started boilerplate app for the [reactivemaps](https://github.com/appbaseio/reactivemaps) library.
 
 ## Installation
 
