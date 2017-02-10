@@ -3,10 +3,8 @@ import ReactDom from 'react-dom';
 import {
 	ReactiveBase,
 	SingleList,
-	ResultList
-} from '@appbaseio/reactivebase';
-
-import { ReactiveMap } from '@appbaseio/reactivemaps'
+	ReactiveMap
+} from '@appbaseio/reactivemaps';
 
 class HelloWorld extends Component {
 	render() {
