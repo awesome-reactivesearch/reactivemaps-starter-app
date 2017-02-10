@@ -1,6 +1,8 @@
 # `reactivemaps-starter-app`
 
-The reactivemaps starter app is a simple getting started boilerplate app for the [reactivemaps](https://github.com/appbaseio/reactivemaps) library.
+The reactivemaps starter app is a simple getting started boilerplate app for the [reactivemaps](https://github.com/appbaseio/reactivemaps) library. To use this, first clone the repository.
+
+`git clone https://github.com/appbaseio-apps/reactivemaps-starter-app.git`.
 
 ## Installation
 
@@ -9,6 +11,8 @@ The reactivemaps starter app is a simple getting started boilerplate app for the
 - `npm run build` for production
 
 ### Try with bootstrap CSS instead of materialize
+
+The `master` branch uses materialize as the CSS styling framework. `reactivemaps` also comes with support for bootstrap in the form a [bootstrap polyfill css file](https://github.com/appbaseio/reactivemaps/blob/dev/dist/css/bootstrap.polyfill.min.css) that can be included to render the components with bootstrap. You can try the `withbootstrap` branch to see this in action.
 
 ```sh
 git checkout withbootstrap
