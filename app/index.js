@@ -40,8 +40,8 @@ class HelloWorld extends Component {
 							showSearchAsMove={true}
 							showMapStyles={true}
 							title="Meetupblast"
-							actuate={{
-								CitySensor: {"operation": "must"}
+							react={{
+								and: "CitySensor"
 							}}
 						/>
 					</div>
