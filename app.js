@@ -34,8 +34,8 @@ var Testing = React.createClass({
 								appbaseField="location"
 								showPopoverOn="click"
 								onPopoverTrigger={this.onPopoverTrigger}
-								actuate={{
-								  CitySensor: {"operation": "must"}
+								react={{
+									and: "CitySensor"
 								}}
 							/>
 						</div>
