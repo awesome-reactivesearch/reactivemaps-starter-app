@@ -4,7 +4,7 @@
   "description": "Reactivemaps Starter App",
   "main": "index.js",
   "scripts": {
-    "webpack-dev-server": "webpack-dev-server --inline --hot --port 8000",
+    "webpack-dev-server": "webpack-dev-server --inline --hot --port 8002",
     "dev": "webpack -d --watch",
     "start": "npm-run-all --parallel dev webpack-dev-server",
     "build": "webpack -p"
@@ -26,7 +26,7 @@
     "webpack": "^1.13.3"
   },
   "dependencies": {
-    "@appbaseio/reactivemaps": "^1.0.0-alpha",
+    "@appbaseio/reactivemaps": "^1.0.0-alpha1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   }
