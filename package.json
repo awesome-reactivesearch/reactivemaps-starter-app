@@ -23,7 +23,7 @@
     "html-webpack-plugin": "^2.24.1",
     "npm-run-all": "^3.1.1",
     "shebang-loader": "0.0.1",
-    "webpack": "^1.13.3"
+    "webpack": "^1.14.0"
   },
   "dependencies": {
     "@appbaseio/reactivemaps": "^1.0.0-alpha1",
