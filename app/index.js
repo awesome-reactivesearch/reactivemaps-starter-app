@@ -10,9 +10,8 @@ class HelloWorld extends Component {
 	render() {
 		return (
 			<ReactiveBase
-				app="meetup_demo"
-				username="LPpISlEBe"
-				password="2a8935f5-0f63-4084-bc3e-2b2b4d1a8e02"
+				app="reactivemap-demo"
+				credentials="mERhtO4vc:50ffe077-9232-4a39-9fa7-4a69bace8f63"
 				type="meetupdata1"
 			>
 				<div className="row">
