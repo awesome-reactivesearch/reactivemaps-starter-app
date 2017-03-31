@@ -16,14 +16,14 @@ var Testing = React.createClass({
 		return (
 			<div className="container-fluid h-100 liveExample">
 				<ReactiveBase
-					app="hellojson"
-					username="Xxgkgxhk1"
-					password="6b501af7-604b-4a25-8a52-5194dfe106aa" >
+					app="reactivemap-demo"
+					credentials="mERhtO4vc:50ffe077-9232-4a39-9fa7-4a69bace8f63"
+				>
 					<div className="row">
 						<div className="col s4 col-xs-4 col-sm-4 appbaseListCol">
 							<SingleList
 								componentId="CitySensor"
-								appbaseField="city"
+								appbaseField="group.group_city.raw"
 								title="Cities"
 								defaultSelected="sanfrancisco"
 								showSearch={true}
