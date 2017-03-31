@@ -97,8 +97,7 @@
 					_reactivemaps.ReactiveBase,
 					{
 						app: 'reactivemap-demo',
-						username: 'SL8fiQ1fg',
-						password: '71ea4254-49ba-4685-8276-e44da225c141',
+						credentials: 'SL8fiQ1fg:71ea4254-49ba-4685-8276-e44da225c141',
 						type: 'meetupdata1'
 					},
 					_react2.default.createElement(
@@ -31249,8 +31248,9 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var _require = __webpack_require__(/*! fbemitter */ 245),
-	    EventEmitter = _require.EventEmitter;
+	var _require = __webpack_require__(/*! fbemitter */ 245);
+	
+	var EventEmitter = _require.EventEmitter;
 	
 	var helper = __webpack_require__(/*! ./helper */ 242);
 	
@@ -31541,29 +31541,34 @@
 			var aggsObj = channelObj.react[depend];
 			var order = void 0,
 			    type = void 0;
-			if (aggsObj.sortRef) {
-				var sortField = sortAvailable(aggsObj.sortRef);
-				if (sortField && sortField.aggSort) {
-					aggsObj.sort = sortField.aggSort;
+			var query = void 0;
+			if (aggsObj.customQuery) {
+				query = aggsObj.customQuery(aggsObj);
+			} else {
+				if (aggsObj.sortRef) {
+					var sortField = sortAvailable(aggsObj.sortRef);
+					if (sortField && sortField.aggSort) {
+						aggsObj.sort = sortField.aggSort;
+					}
 				}
-			}
-			if (aggsObj.sort === "count") {
-				order = "desc";
-				type = "_count";
-			} else if (aggsObj.sort === "asc" || aggsObj.sort === "desc") {
-				order = aggsObj.sort;
-				type = "_term";
-			}
-			var query = _defineProperty({}, aggsObj.key, {
-				"terms": {
-					"field": aggsObj.key
+				if (aggsObj.sort === "count") {
+					order = "desc";
+					type = "_count";
+				} else if (aggsObj.sort === "asc" || aggsObj.sort === "desc") {
+					order = aggsObj.sort;
+					type = "_term";
 				}
-			});
-			if (aggsObj.size) {
-				query[aggsObj.key].terms.size = aggsObj.size;
-			}
-			if (aggsObj.sort) {
-				query[aggsObj.key].terms.order = _defineProperty({}, type, order);
+				query = _defineProperty({}, aggsObj.key, {
+					"terms": {
+						"field": aggsObj.key
+					}
+				});
+				if (aggsObj.size) {
+					query[aggsObj.key].terms.size = aggsObj.size;
+				}
+				if (aggsObj.sort) {
+					query[aggsObj.key].terms.order = _defineProperty({}, type, order);
+				}
 			}
 			return query;
 		}
@@ -31641,8 +31646,9 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	/* eslint max-lines: 0 */
-	var _require = __webpack_require__(/*! fbemitter */ 245),
-	    EventEmitter = _require.EventEmitter;
+	var _require = __webpack_require__(/*! fbemitter */ 245);
+	
+	var EventEmitter = _require.EventEmitter;
 	
 	var _ = __webpack_require__(/*! lodash */ 250);
 	
@@ -31674,15 +31680,17 @@
 		// initialize the process
 		this.init = function () {
 			react.forEach(function (depend) {
-				checkDependExists(depend);
-				if (_typeof(selectedSensor[depend]) === "object") {
-					var newData = _(selectedSensor[depend]).toPairs().sortBy(0).fromPairs().value();
-					var oldData = _(previousSelectedSensor[depend]).toPairs().sortBy(0).fromPairs().value();
-					if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+				if (!(depend.indexOf('channel-options-') > -1 || depend.indexOf('aggs') > -1)) {
+					checkDependExists(depend);
+					if (_typeof(selectedSensor[depend]) === "object") {
+						var newData = _(selectedSensor[depend]).toPairs().sortBy(0).fromPairs().value();
+						var oldData = _(previousSelectedSensor[depend]).toPairs().sortBy(0).fromPairs().value();
+						if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+							applyDependChange(react, depend);
+						}
+					} else if (selectedSensor[depend] !== previousSelectedSensor[depend]) {
 						applyDependChange(react, depend);
 					}
-				} else if (selectedSensor[depend] !== previousSelectedSensor[depend]) {
-					applyDependChange(react, depend);
 				}
 			});
 		};
@@ -31693,7 +31701,7 @@
 				var foundDepend = false;
 	
 				Object.keys(data).forEach(function (item) {
-					if (react.indexOf(item) > -1) {
+					if (item.indexOf('channel-options-') < 0 && react.indexOf(item) > -1) {
 						foundDepend = true;
 					}
 				});
@@ -63473,30 +63481,30 @@
 								endThreshold: nextProps.range.end
 							});
 						} else {
-							var values = {
+							var _values = {
 								min: _this2.state.values.min,
 								max: _this2.state.values.max
 							};
 							if (_this2.state.values.min < nextProps.range.start) {
-								values.min = nextProps.range.start;
+								_values.min = nextProps.range.start;
 							}
 							if (_this2.state.values.max > nextProps.range.end) {
-								values.max = nextProps.range.end;
+								_values.max = nextProps.range.end;
 							}
 							_this2.setState({
 								startThreshold: nextProps.range.start,
 								endThreshold: nextProps.range.end,
-								values: values
+								values: _values
 							});
 							var currentRange = {
-								from: values.min,
-								to: values.max
+								from: _values.min,
+								to: _values.max
 							};
-							var obj = {
+							var _obj = {
 								key: _this2.props.componentId,
 								value: currentRange
 							};
-							helper.selectedSensor.set(obj, true);
+							helper.selectedSensor.set(_obj, true);
 						}
 						_this2.setRangeValue();
 					}
@@ -63510,14 +63518,14 @@
 									max: nextProps.defaultSelected.end - _rem
 								}
 							});
-							var _obj = {
+							var _obj2 = {
 								key: _this2.props.componentId,
 								value: {
 									from: _this2.state.values.min,
 									to: nextProps.defaultSelected.end - _rem
 								}
 							};
-							helper.selectedSensor.set(_obj, true);
+							helper.selectedSensor.set(_obj2, true);
 						}
 					}
 				}, 300);
@@ -67714,31 +67722,26 @@
 	        props.afterPopupVisibleChange(state.popupVisible);
 	      }
 	    });
-	    if (this.isClickToHide()) {
-	      if (state.popupVisible) {
-	        if (!this.clickOutsideHandler) {
-	          var currentDocument = props.getDocument();
-	          this.clickOutsideHandler = (0, _addEventListener2["default"])(currentDocument, 'mousedown', this.onDocumentClick);
-	          this.touchOutsideHandler = (0, _addEventListener2["default"])(currentDocument, 'touchstart', this.onDocumentClick);
-	        }
-	        return;
+	
+	    if (state.popupVisible) {
+	      var currentDocument = void 0;
+	      if (!this.clickOutsideHandler && this.isClickToHide()) {
+	        currentDocument = props.getDocument();
+	        this.clickOutsideHandler = (0, _addEventListener2["default"])(currentDocument, 'mousedown', this.onDocumentClick);
 	      }
+	      // always hide on mobile
+	      if (!this.touchOutsideHandler) {
+	        currentDocument = currentDocument || props.getDocument();
+	        this.touchOutsideHandler = (0, _addEventListener2["default"])(currentDocument, 'touchstart', this.onDocumentClick);
+	      }
+	      return;
 	    }
-	    if (this.clickOutsideHandler) {
-	      this.clickOutsideHandler.remove();
-	      this.touchOutsideHandler.remove();
-	      this.clickOutsideHandler = null;
-	      this.touchOutsideHandler = null;
-	    }
+	
+	    this.clearOutsideHandler();
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.clearDelayTimer();
-	    if (this.clickOutsideHandler) {
-	      this.clickOutsideHandler.remove();
-	      this.touchOutsideHandler.remove();
-	      this.clickOutsideHandler = null;
-	      this.touchOutsideHandler = null;
-	    }
+	    this.clearOutsideHandler();
 	  },
 	  onMouseEnter: function onMouseEnter(e) {
 	    this.fireEvents('onMouseEnter', e);
@@ -67921,6 +67924,17 @@
 	      this.delayTimer = null;
 	    }
 	  },
+	  clearOutsideHandler: function clearOutsideHandler() {
+	    if (this.clickOutsideHandler) {
+	      this.clickOutsideHandler.remove();
+	      this.clickOutsideHandler = null;
+	    }
+	
+	    if (this.touchOutsideHandler) {
+	      this.touchOutsideHandler.remove();
+	      this.touchOutsideHandler = null;
+	    }
+	  },
 	  createTwoChains: function createTwoChains(event) {
 	    var childPros = this.props.children.props;
 	    var props = this.props;
@@ -67994,7 +68008,6 @@
 	    var children = props.children;
 	    var child = _react2["default"].Children.only(children);
 	    var newChildProps = {};
-	
 	    if (this.isClickToHide() || this.isClickToShow()) {
 	      newChildProps.onClick = this.onClick;
 	      newChildProps.onMouseDown = this.onMouseDown;
@@ -98670,10 +98683,10 @@
 	};
 	
 	var NumberComponent = function NumberComponent(props) {
-		var label = props.label,
-		    end = props.end,
-		    start = props.start,
-		    handleChange = props.handleChange;
+		var label = props.label;
+		var end = props.end;
+		var start = props.start;
+		var handleChange = props.handleChange;
 	
 		var value = props.value != undefined ? props.value : start;
 		var isPlusActive = end != undefined ? value < end : true;
@@ -98709,9 +98722,9 @@
 	
 			var _this = _possibleConstructorReturn(this, (NumberBox.__proto__ || Object.getPrototypeOf(NumberBox)).call(this, props));
 	
-			var _this$props = _this.props,
-			    defaultSelected = _this$props.defaultSelected,
-			    focused = _this$props.focused;
+			var _this$props = _this.props;
+			var defaultSelected = _this$props.defaultSelected;
+			var focused = _this$props.focused;
 	
 			_this.state = {
 				currentValue: defaultSelected,
@@ -98753,9 +98766,9 @@
 		}, {
 			key: "setQueryInfo",
 			value: function setQueryInfo() {
-				var _props = this.props,
-				    componentId = _props.componentId,
-				    appbaseField = _props.appbaseField;
+				var _props = this.props;
+				var componentId = _props.componentId;
+				var appbaseField = _props.appbaseField;
 	
 				var obj = {
 					key: componentId,
@@ -98774,11 +98787,11 @@
 			key: "handleChange",
 			value: function handleChange() {
 				var increment = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-				var _props2 = this.props,
-				    componentId = _props2.componentId,
-				    data = _props2.data;
-				var start = data.start,
-				    end = data.end;
+				var _props2 = this.props;
+				var componentId = _props2.componentId;
+				var data = _props2.data;
+				var start = data.start;
+				var end = data.end;
 	
 				var inputVal = this.state.currentValue;
 	
@@ -98804,10 +98817,10 @@
 		}, {
 			key: "render",
 			value: function render() {
-				var _props3 = this.props,
-				    title = _props3.title,
-				    data = _props3.data,
-				    labelPosition = _props3.labelPosition;
+				var _props3 = this.props;
+				var title = _props3.title;
+				var data = _props3.data;
+				var labelPosition = _props3.labelPosition;
 				var currentValue = this.state.currentValue;
 	
 				var ComponentTitle = title ? _react2.default.createElement(TitleComponent, { title: title }) : null;
@@ -108305,13 +108318,13 @@
 	    }
 	  };
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../process/browser.js */ 4), __webpack_require__(/*! ./../../../../node-libs-browser/~/timers-browserify/main.js */ 641).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../process/browser.js */ 4), __webpack_require__(/*! ./../../../../timers-browserify/main.js */ 641).setImmediate))
 
 /***/ },
 /* 641 */
-/*!*********************************************************!*\
-  !*** ./~/node-libs-browser/~/timers-browserify/main.js ***!
-  \*********************************************************/
+/*!*************************************!*\
+  !*** ./~/timers-browserify/main.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var apply = Function.prototype.apply;
@@ -110825,7 +110838,7 @@
 	    }
 	  };
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../process/browser.js */ 4), __webpack_require__(/*! ./../../../../node-libs-browser/~/timers-browserify/main.js */ 641).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../process/browser.js */ 4), __webpack_require__(/*! ./../../../../timers-browserify/main.js */ 641).setImmediate))
 
 /***/ },
 /* 657 */
@@ -115614,10 +115627,14 @@
   \*******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer, module, process) {'use strict'
+	/* WEBPACK VAR INJECTION */(function(Buffer, module, process) {
 	
-	var Parser = __webpack_require__(/*! jsonparse */ 682)
-	  , through = __webpack_require__(/*! through */ 683)
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
+	var Parser = __webpack_require__(/*! jsonparse */ 682),
+	    through = __webpack_require__(/*! through */ 683);
 	
 	/*
 	
@@ -115629,243 +115646,209 @@
 	*/
 	
 	exports.parse = function (path, map) {
-	  var header, footer
-	  var parser = new Parser()
+	  var header, footer;
+	  var parser = new Parser();
 	  var stream = through(function (chunk) {
-	    if('string' === typeof chunk)
-	      chunk = new Buffer(chunk)
-	    parser.write(chunk)
-	  },
-	  function (data) {
-	    if(data)
-	      stream.write(data)
-	    if (header)
-	        stream.emit('header', header)
-	    if (footer)
-	      stream.emit('footer', footer)
-	    stream.queue(null)
-	  })
+	    if ('string' === typeof chunk) chunk = new Buffer(chunk);
+	    parser.write(chunk);
+	  }, function (data) {
+	    if (data) stream.write(data);
+	    if (header) stream.emit('header', header);
+	    if (footer) stream.emit('footer', footer);
+	    stream.queue(null);
+	  });
 	
-	  if('string' === typeof path)
-	    path = path.split('.').map(function (e) {
-	      if (e === '$*')
-	        return {emitKey: true}
-	      else if (e === '*')
-	        return true
-	      else if (e === '') // '..'.split('.') returns an empty string
-	        return {recurse: true}
-	      else
-	        return e
-	    })
+	  if ('string' === typeof path) path = path.split('.').map(function (e) {
+	    if (e === '$*') return { emitKey: true };else if (e === '*') return true;else if (e === '') // '..'.split('.') returns an empty string
+	      return { recurse: true };else return e;
+	  });
 	
-	
-	  var count = 0, _key
-	  if(!path || !path.length)
-	    path = null
+	  var count = 0,
+	      _key;
+	  if (!path || !path.length) path = null;
 	
 	  parser.onValue = function (value) {
-	    if (!this.root)
-	      stream.root = value
+	    if (!this.root) stream.root = value;
 	
-	    if(! path) return
+	    if (!path) return;
 	
-	    var i = 0 // iterates on path
-	    var j  = 0 // iterates on stack
+	    var i = 0; // iterates on path
+	    var j = 0; // iterates on stack
 	    var emitKey = false;
 	    var emitPath = false;
 	    while (i < path.length) {
-	      var key = path[i]
-	      var c
-	      j++
+	      var key = path[i];
+	      var c;
+	      j++;
 	
 	      if (key && !key.recurse) {
-	        c = (j === this.stack.length) ? this : this.stack[j]
-	        if (!c) return
-	        if (! check(key, c.key)) {
-	          setHeaderFooter(c.key, value)
-	          return
+	        c = j === this.stack.length ? this : this.stack[j];
+	        if (!c) return;
+	        if (!check(key, c.key)) {
+	          setHeaderFooter(c.key, value);
+	          return;
 	        }
 	        emitKey = !!key.emitKey;
 	        emitPath = !!key.emitPath;
-	        i++
+	        i++;
 	      } else {
-	        i++
-	        var nextKey = path[i]
-	        if (! nextKey) return
+	        i++;
+	        var nextKey = path[i];
+	        if (!nextKey) return;
 	        while (true) {
-	          c = (j === this.stack.length) ? this : this.stack[j]
-	          if (!c) return
+	          c = j === this.stack.length ? this : this.stack[j];
+	          if (!c) return;
 	          if (check(nextKey, c.key)) {
 	            i++;
-	            if (!Object.isFrozen(this.stack[j]))
-	              this.stack[j].value = null
-	            break
+	            if (!Object.isFrozen(this.stack[j])) this.stack[j].value = null;
+	            break;
 	          } else {
-	            setHeaderFooter(c.key, value)
+	            setHeaderFooter(c.key, value);
 	          }
-	          j++
+	          j++;
 	        }
 	      }
-	
 	    }
-	    if (j !== this.stack.length) return
-	
-	    count ++
-	    var actualPath = this.stack.slice(1).map(function(element) { return element.key }).concat([this.key])
-	    var data = this.value[this.key]
-	    if(null != data)
-	      if(null != (data = map ? map(data, actualPath) : data)) {
-	        if (emitKey || emitPath) {
-	          data = { value: data };
-	          if (emitKey)
-	            data["key"] = this.key;
-	          if (emitPath)
-	            data["path"] = actualPath;
-	        }
-	
-	        stream.queue(data)
-	      }
-	    delete this.value[this.key]
-	    for(var k in this.stack)
-	      if (!Object.isFrozen(this.stack[k]))
-	        this.stack[k].value = null
 	
 	    // emit header
 	    if (header) {
 	      stream.emit('header', header);
 	      header = false;
 	    }
-	  }
+	    if (j !== this.stack.length) return;
+	
+	    count++;
+	    var actualPath = this.stack.slice(1).map(function (element) {
+	      return element.key;
+	    }).concat([this.key]);
+	    var data = this.value[this.key];
+	    if (null != data) if (null != (data = map ? map(data, actualPath) : data)) {
+	      if (emitKey || emitPath) {
+	        data = { value: data };
+	        if (emitKey) data["key"] = this.key;
+	        if (emitPath) data["path"] = actualPath;
+	      }
+	
+	      stream.queue(data);
+	    }
+	    delete this.value[this.key];
+	    for (var k in this.stack) {
+	      if (!Object.isFrozen(this.stack[k])) this.stack[k].value = null;
+	    }
+	  };
 	  parser._onToken = parser.onToken;
 	
 	  parser.onToken = function (token, value) {
 	    parser._onToken(token, value);
 	    if (this.stack.length === 0) {
 	      if (stream.root) {
-	        if(!path)
-	          stream.queue(stream.root)
+	        if (!path) stream.queue(stream.root);
 	        count = 0;
 	        stream.root = null;
 	      }
 	    }
-	  }
+	  };
 	
 	  parser.onError = function (err) {
-	    if(err.message.indexOf("at position") > -1)
-	      err.message = "Invalid JSON (" + err.message + ")";
-	    stream.emit('error', err)
-	  }
+	    if (err.message.indexOf("at position") > -1) err.message = "Invalid JSON (" + err.message + ")";
+	    stream.emit('error', err);
+	  };
 	
-	  return stream
+	  return stream;
 	
 	  function setHeaderFooter(key, value) {
 	    // header has not been emitted yet
 	    if (header !== false) {
-	      header = header || {}
-	      header[key] = value
+	      header = header || {};
+	      header[key] = value;
 	    }
 	
 	    // footer has not been emitted yet but header has
 	    if (footer !== false && header === false) {
-	      footer = footer || {}
-	      footer[key] = value
+	      footer = footer || {};
+	      footer[key] = value;
 	    }
 	  }
-	}
+	};
 	
-	function check (x, y) {
-	  if ('string' === typeof x)
-	    return y == x
-	  else if (x && 'function' === typeof x.exec)
-	    return x.exec(y)
-	  else if ('boolean' === typeof x || 'object' === typeof x)
-	    return x
-	  else if ('function' === typeof x)
-	    return x(y)
-	  return false
+	function check(x, y) {
+	  if ('string' === typeof x) return y == x;else if (x && 'function' === typeof x.exec) return x.exec(y);else if ('boolean' === typeof x || 'object' === (typeof x === 'undefined' ? 'undefined' : _typeof(x))) return x;else if ('function' === typeof x) return x(y);
+	  return false;
 	}
 	
 	exports.stringify = function (op, sep, cl, indent) {
-	  indent = indent || 0
-	  if (op === false){
-	    op = ''
-	    sep = '\n'
-	    cl = ''
+	  indent = indent || 0;
+	  if (op === false) {
+	    op = '';
+	    sep = '\n';
+	    cl = '';
 	  } else if (op == null) {
 	
-	    op = '[\n'
-	    sep = '\n,\n'
-	    cl = '\n]\n'
-	
+	    op = '[\n';
+	    sep = '\n,\n';
+	    cl = '\n]\n';
 	  }
 	
 	  //else, what ever you like
 	
-	  var stream
-	    , first = true
-	    , anyData = false
+	  var stream,
+	      first = true,
+	      anyData = false;
 	  stream = through(function (data) {
-	    anyData = true
+	    anyData = true;
 	    try {
-	      var json = JSON.stringify(data, null, indent)
+	      var json = JSON.stringify(data, null, indent);
 	    } catch (err) {
-	      return stream.emit('error', err)
+	      return stream.emit('error', err);
 	    }
-	    if(first) { first = false ; stream.queue(op + json)}
-	    else stream.queue(sep + json)
-	  },
-	  function (data) {
-	    if(!anyData)
-	      stream.queue(op)
-	    stream.queue(cl)
-	    stream.queue(null)
-	  })
+	    if (first) {
+	      first = false;stream.queue(op + json);
+	    } else stream.queue(sep + json);
+	  }, function (data) {
+	    if (!anyData) stream.queue(op);
+	    stream.queue(cl);
+	    stream.queue(null);
+	  });
 	
-	  return stream
-	}
+	  return stream;
+	};
 	
 	exports.stringifyObject = function (op, sep, cl, indent) {
-	  indent = indent || 0
-	  if (op === false){
-	    op = ''
-	    sep = '\n'
-	    cl = ''
+	  indent = indent || 0;
+	  if (op === false) {
+	    op = '';
+	    sep = '\n';
+	    cl = '';
 	  } else if (op == null) {
 	
-	    op = '{\n'
-	    sep = '\n,\n'
-	    cl = '\n}\n'
-	
+	    op = '{\n';
+	    sep = '\n,\n';
+	    cl = '\n}\n';
 	  }
 	
 	  //else, what ever you like
 	
-	  var first = true
-	  var anyData = false
+	  var first = true;
+	  var anyData = false;
 	  var stream = through(function (data) {
-	    anyData = true
-	    var json = JSON.stringify(data[0]) + ':' + JSON.stringify(data[1], null, indent)
-	    if(first) { first = false ; this.queue(op + json)}
-	    else this.queue(sep + json)
-	  },
-	  function (data) {
-	    if(!anyData) this.queue(op)
-	    this.queue(cl)
+	    anyData = true;
+	    var json = JSON.stringify(data[0]) + ':' + JSON.stringify(data[1], null, indent);
+	    if (first) {
+	      first = false;this.queue(op + json);
+	    } else this.queue(sep + json);
+	  }, function (data) {
+	    if (!anyData) this.queue(op);
+	    this.queue(cl);
 	
-	    this.queue(null)
-	  })
+	    this.queue(null);
+	  });
 	
-	  return stream
+	  return stream;
+	};
+	
+	if (!module.parent && process.title !== 'browser') {
+	  process.stdin.pipe(exports.parse(process.argv[2])).pipe(exports.stringify('[', ',\n', ']\n', 2)).pipe(process.stdout);
 	}
-	
-	if(!module.parent && process.title !== 'browser') {
-	  process.stdin
-	    .pipe(exports.parse(process.argv[2]))
-	    .pipe(exports.stringify('[', ',\n', ']\n', 2))
-	    .pipe(process.stdout)
-	}
-	
-	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../buffer/index.js */ 620).Buffer, __webpack_require__(/*! ./../webpack/buildin/module.js */ 251)(module), __webpack_require__(/*! ./../process/browser.js */ 4)))
 
 /***/ },
@@ -118391,7 +118374,7 @@
 	    }
 	  };
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../process/browser.js */ 4), __webpack_require__(/*! ./../../../../node-libs-browser/~/timers-browserify/main.js */ 641).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../process/browser.js */ 4), __webpack_require__(/*! ./../../../../timers-browserify/main.js */ 641).setImmediate))
 
 /***/ },
 /* 693 */
