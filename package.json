@@ -4,7 +4,7 @@
   "description": "Reactivemaps Starter App",
   "main": "index.js",
   "scripts": {
-    "start": "browserify -t [ babelify --presets [ es2015 react ] ] app/index.js -o dist/bundle.js && gulp"
+    "start": "browserify -u 'ws' -t [ babelify --presets [ es2015 react ] ] app/index.js -o dist/bundle.js && gulp"
   },
   "author": {
     "name": "Deepak Grover",
