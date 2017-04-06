@@ -1,26 +1,25 @@
+const path = require("path");
+
 module.exports = {
-	entry: ['./app/index.js'],
+	context: path.resolve(__dirname, "./app"),
+	entry: "./index.js",
 	output: {
-		path: __dirname + '/dist',
+		path: path.resolve(__dirname, "./dist"),
 		filename: "bundle.js",
-		publicPath: '/dist/'
+		publicPath: "/dist/"
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.js$/, 
 				exclude: /node_modules/, 
-				loader: "babel-loader",
-				query: {
-					presets: ['es2015', 'react']
-				}
+				use: ["babel-loader"]
 			},
 			{
 				test: /node_modules\/JSONStream\/index\.js$/,
-				loaders: ['shebang-loader', 'babel-loader']
+				use: ["shebang-loader", "babel-loader"]
 			}
-		],
-		noParse: ['ws']
+		]
 	},
-	externals: ['ws']
+	externals: ["ws"]
 }
