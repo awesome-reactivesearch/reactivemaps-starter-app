@@ -22,7 +22,7 @@ npm start  (open localhost:8080)
 
 ## Try in browser (without NPM)
 
-If you are new to React and don't want to dig into the NPM based bundling (webpack, browserify, gulp), try this branch.
+If you are new to React and don't want to dig into the NPM based bundling (webpack, browserify, gulp), try the `umd` branch.
 
 ```sh
 git checkout umd
