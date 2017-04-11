@@ -31,7 +31,6 @@ class HelloWorld extends Component {
 							appbaseField="location"
 							defaultZoom={13}
 							defaultCenter={{ lat: 37.74, lng: -122.45 }}
-							historicalData={true}
 							setMarkerCluster={false}
 							defaultMapStyle="Light Monochrome"
 							autoCenter={true}
