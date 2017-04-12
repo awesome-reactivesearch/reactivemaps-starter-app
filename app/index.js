@@ -22,7 +22,6 @@ class HelloWorld extends Component {
 							title="SingleList"
 							defaultSelected="London"
 							size={100}
-							{...this.props}
 						/>
 					</div>
 
