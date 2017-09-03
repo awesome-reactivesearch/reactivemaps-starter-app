@@ -23,7 +23,7 @@ var Testing = React.createClass({
 						<div className="col s4 col-xs-4 col-sm-4 appbaseListCol">
 							<SingleList
 								componentId="CitySensor"
-								appbaseField="group.group_city.raw"
+								dataField="group.group_city.raw"
 								title="Cities"
 								defaultSelected="sanfrancisco"
 								showSearch={true}
@@ -31,7 +31,7 @@ var Testing = React.createClass({
 						</div>
 						<div className="col s8 col-xs-8 col-sm-8 h-100" style={{height: '1000px'}}>
 							<ReactiveMap
-								appbaseField="location"
+								dataField="location"
 								showPopoverOn="click"
 								onPopoverTrigger={this.onPopoverTrigger}
 								react={{
