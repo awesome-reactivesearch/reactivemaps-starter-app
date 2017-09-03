@@ -18,18 +18,16 @@ class HelloWorld extends Component {
 					<div className="col s6 col-xs-6">
 						<SingleList
 							componentId="CitySensor"
-							appbaseField="group.group_city.raw"
+							dataField="group.group_city.raw"
 							title="SingleList"
-							defaultSelected="London"
 							size={100}
 						/>
 					</div>
 
 					<div className="col s6 col-xs-6">
 						<ReactiveMap
-							appbaseField="location"
+							dataField="location"
 							defaultZoom={13}
-							defaultCenter={{ lat: 37.74, lng: -122.45 }}
 							setMarkerCluster={false}
 							defaultMapStyle="Light Monochrome"
 							autoCenter={true}
